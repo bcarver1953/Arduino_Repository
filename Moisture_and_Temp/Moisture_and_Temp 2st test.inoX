@@ -1,0 +1,54 @@
+/*
+Moisture and Temp
+
+Read Moisture and report on OLED :)
+
+Jan 8 2020
+*/
+
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+
+#define OLED_RESET -1 // Reset pin # (or -1 if sharing Arduino reset pin)
+Adafruit_SSD1306 display(128, 32, &Wire, OLED_RESET);
+
+  int Moistureval;
+  int Tempval;
+  String strMHeading = "Moist Value: ";
+  String strTHeading = "Temp  Value: ";
+
+void setup() 
+{
+  Serial.begin(9600); // open serial port, set the baud rate as 9600 bps
+
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+    Serial.println(F("SSD1306 allocation failed"));
+    for(;;); // If OLED fails, Don't proceed, loop forever
+  }
+  display.display(); // display the adafruit splash screen
+  delay(2000); // Pause for 2 seconds
+}
+
+void loop() 
+{
+
+  Moistureval = analogRead(7); //connect Most sensor to Analog 7
+  Tempval     = analogRead(0); //connect Most sensor to Analog 0
+ // Serial.println(val); //print the value to serial port
+ // 
+
+display.clearDisplay();
+display.setTextSize(1);
+display.setTextColor(WHITE);
+display.setCursor(0,0);
+display.println("-- Moisture Sensor --");
+
+String strMDisplayText = strMHeading + Moistureval;
+display.println(strMDisplayText);
+String strTDisplayText = strTHeading + Tempval;
+display.println(strTDisplayText);
+display.println("--");
+display.display();  // display the updated screen
+
+  delay(1000);
+}
